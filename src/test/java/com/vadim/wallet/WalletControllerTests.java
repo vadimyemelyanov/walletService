@@ -4,12 +4,14 @@ import com.vadim.wallet.controller.WalletController;
 import com.vadim.wallet.dao.PlayerEntity;
 import com.vadim.wallet.dto.Balance;
 import com.vadim.wallet.dto.BasicResponse;
+import com.vadim.wallet.dto.PlayerRegistrationRequest;
 import com.vadim.wallet.dto.PlayerRequest;
 import com.vadim.wallet.exceptions.NotEnoughMoneyOnBalanceException;
 import com.vadim.wallet.exceptions.PlayerAlreadyExistsException;
 import com.vadim.wallet.exceptions.PlayerNotFoundException;
 import com.vadim.wallet.service.WalletService;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,9 +36,11 @@ public class WalletControllerTests {
     private PlayerRequest playerRequest;
     private Balance balance;
     private PlayerEntity playerEntity;
-
-    @BeforeClass
-    void beforeTests() {
+    private PlayerRegistrationRequest playerRegistrationRequest;
+    @Before
+   public void beforeTests() {
+        playerRegistrationRequest = new PlayerRegistrationRequest();
+        playerRegistrationRequest.setId(1);
         playerRequest = new PlayerRequest();
         playerRequest.setAmount(0);
         playerRequest.setId(1);
@@ -49,16 +53,16 @@ public class WalletControllerTests {
 
     @Test
     public void testRegistrationSuccess() {
-        when(walletService.registerPlayer(playerRequest)).thenReturn(new Balance(0));
-        ResponseEntity<BasicResponse> register = walletController.register(playerRequest);
+        when(walletService.registerPlayer(playerRegistrationRequest)).thenReturn(new Balance(0));
+        ResponseEntity<BasicResponse> register = walletController.register(playerRegistrationRequest);
         Assert.assertEquals(HttpStatus.OK, register.getStatusCode());
         Assert.assertEquals(Balance.class,register.getBody().getResponse().getClass());
     }
 
     @Test
     public void testRegistrationPlayerAlreadyExists() {
-        when(walletService.registerPlayer(playerRequest)).thenThrow(new PlayerAlreadyExistsException());
-        ResponseEntity<BasicResponse> register = walletController.register(playerRequest);
+        when(walletService.registerPlayer(playerRegistrationRequest)).thenThrow(new PlayerAlreadyExistsException());
+        ResponseEntity<BasicResponse> register = walletController.register(playerRegistrationRequest);
         Assert.assertEquals(HttpStatus.BAD_REQUEST, register.getStatusCode());
         PlayerAlreadyExistsException playerAlreadyExistsException = (PlayerAlreadyExistsException) register.getBody().getError();
         Assert.assertEquals(552, playerAlreadyExistsException.getErrorCode() );

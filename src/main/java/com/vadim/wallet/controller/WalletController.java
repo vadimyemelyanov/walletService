@@ -2,6 +2,7 @@ package com.vadim.wallet.controller;
 
 import com.vadim.wallet.dto.Balance;
 import com.vadim.wallet.dto.BasicResponse;
+import com.vadim.wallet.dto.PlayerRegistrationRequest;
 import com.vadim.wallet.dto.PlayerRequest;
 import com.vadim.wallet.exceptions.NotEnoughMoneyOnBalanceException;
 import com.vadim.wallet.exceptions.PlayerAlreadyExistsException;
@@ -24,7 +25,7 @@ public class WalletController {
 
 
     @PostMapping("/registration")
-    public ResponseEntity<BasicResponse> register(@Valid @RequestBody PlayerRequest player) {
+    public ResponseEntity<BasicResponse> register(@Valid @RequestBody PlayerRegistrationRequest player) {
         Balance balance = null;
         log.info("Registration Request {}", player);
         try {

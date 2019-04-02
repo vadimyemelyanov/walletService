@@ -2,6 +2,7 @@ package com.vadim.wallet.service;
 
 import com.vadim.wallet.dao.PlayerEntity;
 import com.vadim.wallet.dto.Balance;
+import com.vadim.wallet.dto.PlayerRegistrationRequest;
 import com.vadim.wallet.dto.PlayerRequest;
 import com.vadim.wallet.exceptions.NotEnoughMoneyOnBalanceException;
 import com.vadim.wallet.exceptions.PlayerAlreadyExistsException;
@@ -28,7 +29,7 @@ public class WalletService {
     }
 
 
-    public Balance registerPlayer(PlayerRequest player) {
+    public Balance registerPlayer(PlayerRegistrationRequest player) {
         Optional<PlayerEntity> playerFromDataBase = playerRepository.findById(player.getId());
         if (!playerFromDataBase.isPresent()) {
             PlayerEntity playerEntity = new PlayerEntity(player.getId(), 0);

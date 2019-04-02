@@ -2,11 +2,13 @@ package com.vadim.wallet.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import lombok.Getter;
 
 @JsonRootName("error")
 @JsonIgnoreProperties({"cause", "stackTrace"})
+@Getter
 public class NotEnoughMoneyOnBalanceException extends RuntimeException {
-    public int errorCode = 551;
-    public String errorMessage = "Not enough money";
+    private int errorCode = 551;
+    private String errorMessage = "Not enough money";
 
 }
