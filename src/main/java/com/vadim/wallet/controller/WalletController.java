@@ -1,8 +1,8 @@
 package com.vadim.wallet.controller;
 
-import com.vadim.wallet.dao.PlayerEntity;
 import com.vadim.wallet.dto.Balance;
 import com.vadim.wallet.dto.BasicResponse;
+import com.vadim.wallet.dto.PlayerRequest;
 import com.vadim.wallet.exceptions.NotEnoughMoneyOnBalanceException;
 import com.vadim.wallet.exceptions.PlayerAlreadyExistsException;
 import com.vadim.wallet.exceptions.PlayerNotFoundException;
@@ -24,7 +24,7 @@ public class WalletController {
 
 
     @PostMapping("/registration")
-    public ResponseEntity<BasicResponse> register(@Valid @RequestBody PlayerEntity player) {
+    public ResponseEntity<BasicResponse> register(@Valid @RequestBody PlayerRequest player) {
         Balance balance = null;
         log.info("Registration Request {}", player);
         try {
@@ -46,7 +46,7 @@ public class WalletController {
     }
 
     @PutMapping("/deposit")
-    public ResponseEntity<BasicResponse> deposit(@Valid @RequestBody PlayerEntity player) {
+    public ResponseEntity<BasicResponse> deposit(@Valid @RequestBody PlayerRequest player) {
         Balance balance = null;
         log.info("Deposit Request {}", player);
         try {
@@ -57,23 +57,21 @@ public class WalletController {
             return ResponseEntity.badRequest().body(new BasicResponse(balance, e));
         }
     }
-        @PutMapping("/withdraw")
-        public ResponseEntity<BasicResponse> withdraw(@Valid @RequestBody PlayerEntity player) {
-            Balance balance = null;
-            log.info("Withdraw Request {}", player);
-            try {
-                balance = walletService.withdrawMoney(player);
-                return ResponseEntity.ok().body(new BasicResponse(balance, null));
-            }
-            catch (NotEnoughMoneyOnBalanceException e){
-                log.info("Not enough money ", player);
-                return ResponseEntity.badRequest().body(new BasicResponse(balance,e));
-            }
-            catch (PlayerNotFoundException e) {
-                return ResponseEntity.badRequest().body(new BasicResponse(balance,e));
-            }
-    }
 
+    @PutMapping("/withdraw")
+    public ResponseEntity<BasicResponse> withdraw(@Valid @RequestBody PlayerRequest player) {
+        Balance balance = null;
+        log.info("Withdraw Request {}", player);
+        try {
+            balance = walletService.withdrawMoney(player);
+            return ResponseEntity.ok().body(new BasicResponse(balance, null));
+        } catch (NotEnoughMoneyOnBalanceException e) {
+            log.info("Not enough money ", player);
+            return ResponseEntity.badRequest().body(new BasicResponse(balance, e));
+        } catch (PlayerNotFoundException e) {
+            return ResponseEntity.badRequest().body(new BasicResponse(balance, e));
+        }
+    }
 
 
 }

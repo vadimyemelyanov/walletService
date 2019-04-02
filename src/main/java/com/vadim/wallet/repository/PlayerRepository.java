@@ -13,7 +13,7 @@ public interface PlayerRepository  extends JpaRepository<PlayerEntity, Long> {
 
      @Modifying
      @Query("update PlayerEntity set amount=?2 where id = ?1")
-     void depositMoneyByPlayerId(long id, long amount);
+     void updateMoneyByPlayerId(long id, long amount);
 
 
 }
